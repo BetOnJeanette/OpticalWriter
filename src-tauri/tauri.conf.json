@@ -18,6 +18,12 @@
       }
     ],
     "security": {
+      "pattern": {
+        "use": "isolation",
+        "options": {
+          "dir": "../src"
+        }
+      },
       "csp": null
     }
   },
