@@ -1,4 +1,4 @@
-use tauri::State;
+use tauri::{AppHandle, Emitter, Manager, Runtime, State};
 use tauri_plugin_dialog::FilePath;
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -7,8 +7,10 @@ pub struct ProjectBinData{
     pub contained_files: Mutex<HashMap<String, String>>
 } 
 
-pub fn add_files_to_bin(files: Vec<FilePath>, existing_files: State<ProjectBinData>) -> Vec<FilePath> {
+pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<R>) {
     let mut output: Vec<FilePath> = Vec::new();
+    let existing_files:State<ProjectBinData> = app_handle.state();
+
     for file in files {
         let working_file = file.clone();
         let file_path = working_file.as_path().unwrap();
@@ -20,5 +22,5 @@ pub fn add_files_to_bin(files: Vec<FilePath>, existing_files: State<ProjectBinDa
         output.push(file.clone());
         existing_files.contained_files.lock().unwrap().insert(file_path_string, file_name_string);
     }
-    return output;
+    app_handle.emit("files-added", output).unwrap();
 }
