@@ -1,7 +1,7 @@
 use tauri_plugin_dialog::{ DialogExt };
 use tauri::{ AppHandle, Runtime };
 
-#[path="../data/projectBin.rs"] mod project_bin_data;
+#[path="../data/projectBin.rs"] pub mod project_bin_data;
 
 #[tauri::command]
 pub fn request_new_file<R: Runtime>(app_handle: AppHandle<R>) {
