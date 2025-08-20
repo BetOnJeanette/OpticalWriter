@@ -1,11 +1,11 @@
 use tauri_plugin_dialog::{ DialogExt };
 use tauri::{ AppHandle, Runtime };
-use crate::project_bin_data::{self};
+
+#[path="../data/projectBin.rs"] mod project_bin_data;
 
 #[tauri::command]
-pub fn request_new_file() {
+pub fn request_new_file<R: Runtime>(app_handle: AppHandle<R>) {
     println!("Openning dialog");
-    /*
     app_handle.dialog()
         .file()
         .pick_files( move |picked_files| { 
@@ -14,6 +14,5 @@ pub fn request_new_file() {
             if safe_files.len() == 0 { return; }
             project_bin_data::add_files_to_bin(safe_files, app_handle);
         });
-*/
 }
 
