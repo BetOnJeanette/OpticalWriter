@@ -21,7 +21,7 @@
       "pattern": {
         "use": "isolation",
         "options": {
-          "dir": "../src"
+          "dir": "../dist_isolation"
         }
       },
       "csp": null
