@@ -25,7 +25,11 @@ pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<
     app_handle.emit("files-added", output).unwrap();
 }
 
-pub fn get_init_state() -> ProjectBinData {
+#[inline]
+fn get_init_state() -> ProjectBinData {
     return ProjectBinData { contained_files: Mutex::new(HashMap::new()) };
 }
 
+pub fn init_state(man: &AppHandle){
+    man.manage(get_init_state());
+}
