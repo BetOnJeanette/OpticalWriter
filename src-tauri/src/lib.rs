@@ -1,6 +1,7 @@
 use tauri::Manager;
 
 #[path="./commands/projectBin.rs"] mod project_bin;
+#[path="./commands/projectBinDir.rs"] mod project_bin_dir;
 pub mod data;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
