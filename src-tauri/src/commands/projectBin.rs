@@ -22,7 +22,7 @@ pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<
         let file_val = get_file_data(&file);
         let file_id = get_new_id(&existing_files);
         existing_files.lock().unwrap().insert(file_id, file_val.clone());
-        app_handle.emit("file-added", file_val);
+        let _ = app_handle.emit("file-added", file_val);
     }
 }
 
