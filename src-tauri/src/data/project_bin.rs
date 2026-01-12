@@ -1,8 +1,9 @@
+use serde::Serialize;
 use tauri::{AppHandle, Manager};
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 pub struct FileData {
     pub path: String,
     pub display_name: String,
