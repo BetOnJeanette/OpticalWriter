@@ -9,7 +9,7 @@ type NewFiles = {
     files: string[];
 }
 export function ProjectBinDirectory({}: ProjectBinDirectoryProps): JSXElement {
-    listen<NewFiles>("files-added", (event) => console.log(event.payload));
+    listen<NewFiles>("file-added", (event) => console.log(event.payload));
 
     return (<>
     
