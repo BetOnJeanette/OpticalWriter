@@ -1,11 +1,13 @@
+use serde::Serialize;
 use tauri::{AppHandle, Manager};
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-struct Folder {
-    display_name: String,
-    contained_folders: Vec<String>,
-    contained_sources: Vec<String>
+#[derive(Clone, Serialize)]
+pub struct Folder {
+    pub display_name: String,
+    pub contained_folders: Vec<String>,
+    pub contained_sources: Vec<String>
 }
 
 pub type Directory = Mutex<HashMap<String, Folder>>;
