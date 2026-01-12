@@ -3,6 +3,7 @@ use uuid::Uuid;
 
 use crate::data::project_bin_dir::{default_folder, root_dir_str, Directory};
 
+#[tauri::command]
 pub fn add_folder<R: Runtime>(app_handle: AppHandle<R>, selected_dir_id: String){
     let cur_dir_state:State<Directory> = app_handle.state::<Directory>();
     let parent_dir_id = get_safe_parent_dir_id(&selected_dir_id, &cur_dir_state);
