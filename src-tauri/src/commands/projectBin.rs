@@ -4,6 +4,13 @@ use tauri_plugin_dialog::FilePath;
 use uuid::{Uuid};
 use crate::data::project_bin::{ ProjectBinData, FileData };
 
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all="camelCase")]
+struct NewFile {
+    new_file: FileData,
+    id: String
+}
+
 #[tauri::command]
 pub fn request_new_file<R: Runtime>(app_handle: AppHandle<R>) {
     app_handle.dialog()
@@ -21,8 +28,12 @@ pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<
     for file in files {
         let file_val = get_file_data(&file);
         let file_id = get_new_id(&existing_files);
-        existing_files.lock().unwrap().insert(file_id, file_val.clone());
-        let _ = app_handle.emit("file-added", file_val);
+        existing_files.lock().unwrap().insert(file_id.clone(), file_val.clone());
+        let front_file_dat = NewFile {
+            new_file: file_val,
+            id: file_id
+        };
+        let _ = app_handle.emit("file-added", front_file_dat);
     }
 }
 
