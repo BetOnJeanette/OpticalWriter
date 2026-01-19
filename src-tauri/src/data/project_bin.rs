@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::sync::Mutex;
 
 #[derive(Clone, Serialize)]
+#[serde(rename_all="camelCase")]
 pub struct FileData {
     pub path: String,
     pub display_name: String,
