@@ -17,7 +17,10 @@ export function ProjectBinToolbar({curSelFold}: ProjectBinToolbarProps): JSXElem
 			>
 				+
 			</Button>
-			<Button size="small" fullWidth={false}>
+			<Button 
+                size="small"
+                fullWidth={false}
+                onClick={() => invoke("add_folder",{selectedDirId: curSelFold()})}>
 				<AiFillFolderAdd />
 			</Button>
 		</>
