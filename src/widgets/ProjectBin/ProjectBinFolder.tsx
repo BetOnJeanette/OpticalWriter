@@ -1,11 +1,18 @@
-import { createSignal, For, JSXElement, Show } from "solid-js"
-import { listen } from "@tauri-apps/api/event"
-import { List, ListItem, ListItemText } from '@suid/material'
-import { createStore } from "solid-js/store"
+import { Typography } from "@suid/material";
+import { AiOutlineCaretDown, AiOutlineCaretRight } from "solid-icons/ai";
+import { listen } from "@tauri-apps/api/event";
+import { createSignal, For, type JSXElement, Show, Setter } from "solid-js";
+import { createStore } from "solid-js/store";
 
 interface ProjectFolderProps {
+	id: string;
+	displayName: string;
+    curSelDirSetter: Setter<string>;
+}
+
+interface ProjectFolderContentsProps { 
     id: string;
-    displayName: string;
+    curSelDirSestter: Setter<string>;
 }
 
 interface FolderDetails {
@@ -20,38 +27,54 @@ interface FolderCreated {
 	parent_id: string;
 }
 
-function ProjectFolder(props: ProjectFolderProps): JSXElement {
-    let [Expanded, SetExpanded] = createSignal(false);
-
-    return <>
-        <ListItem>
-            <ListItemText>{props.displayName}</ListItemText>
-            <Show when={Expanded}>
-                <ProjectFolderContents id={props.id}/>
-            </Show>
-        </ListItem>
-    </>
+interface FileDetails {
+    path: string;
+    displayName: string;
 }
 
-export function ProjectFolderContents(props: {id: string}): JSXElement {
-    let [Subdirs, SetSubdirs] = createStore<ProjectFolderProps[]>([]);
+interface FileAdded {
+    newFile: FileDetails;
+    id: string;
+    parentId: string;
+}
 
-    listen<FolderCreated>("folder-added", (event) => {
-        if (event.payload.id != props.id) return;
-        let newFolderItem: ProjectFolderProps = {
-            displayName: event.payload.newFolder.displayName,
-            id: event.payload.id
-        }
-        SetSubdirs([...Subdirs, newFolderItem])
-    })
+function ProjectFolder(props: ProjectFolderProps): JSXElement {
+	const [Expanded, SetExpanded] = createSignal(false);
 
-    return <>
-        <List>
-            <For each={Subdirs}> 
+	return (
+		<div onclick={() => props.curSelDirSetter(props.id)}>
+                <Show when={Expanded()} fallback={<AiOutlineCaretRight onclick={() => SetExpanded(true)}/>}>
+                    <AiOutlineCaretDown onclick={() => SetExpanded(false)}/>
+                </Show>
+				<Typography variant="body1">{props.displayName}</Typography>
+				<Show when={Expanded}>
+					<ProjectFolderContents curSelDirSestter={props.curSelDirSetter} id={props.id} />
+				</Show>
+		</div>
+	);
+}
+
+export function ProjectFolderContents(props: ProjectFolderContentsProps): JSXElement {
+	const [Subdirs, SetSubdirs] = createStore<ProjectFolderProps[]>([]);
+    const [Files, SetFiles] = createStore<
+
+	listen<FolderCreated>("folder-added", (event) => {
+		if (event.payload.id !== props.id) return;
+		const newFolderItem: ProjectFolderProps = {
+			displayName: event.payload.newFolder.displayName,
+			id: event.payload.id,
+            curSelDirSetter: props.curSelDirSestter
+		};
+		SetSubdirs([...Subdirs, newFolderItem]);
+	});
+
+	return (
+		<>
+            <For each={Subdirs}>
                 {(item, _) => (
-                    <ProjectFolder id={item.id} displayName={item.displayName} /> 
+                    <ProjectFolder id={item.id} displayName={item.displayName} curSelDirSetter={props.curSelDirSestter}/>
                 )}
             </For>
-        </List>
-    </>
+		</>
+	);
 }

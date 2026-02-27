@@ -8,21 +8,22 @@ use crate::data::project_bin::{ ProjectBinData, FileData };
 #[serde(rename_all="camelCase")]
 struct NewFile {
     new_file: FileData,
-    id: String
+    id: String,
+    parent_id: String
 }
 
 #[tauri::command]
-pub fn request_new_file<R: Runtime>(app_handle: AppHandle<R>) {
+pub fn request_new_file<R: Runtime>(selected_folder_id: String,app_handle: AppHandle<R>) {
     app_handle.dialog()
         .file()
         .pick_files( move |picked_files| { 
             let Some(safe_files) = picked_files else { return };
             if safe_files.len() == 0 { return; }
-            add_files_to_bin(safe_files, app_handle);
+            add_files_to_bin(safe_files, selected_folder_id, app_handle);
         });
 }
 
-pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<R>) {
+pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, selected_folder_id: String, app_handle: AppHandle<R>) {
     let existing_files:State<ProjectBinData> = app_handle.state::<ProjectBinData>();
 
     for file in files {
@@ -31,7 +32,8 @@ pub fn add_files_to_bin<R: Runtime>(files: Vec<FilePath>, app_handle: AppHandle<
         existing_files.lock().unwrap().insert(file_id.clone(), file_val.clone());
         let front_file_dat = NewFile {
             new_file: file_val,
-            id: file_id
+            id: file_id,
+            parent_id: selected_folder_id.clone()
         };
         let _ = app_handle.emit("file-added", front_file_dat);
     }
