@@ -24,7 +24,7 @@ interface FolderDetails {
 interface FolderCreated {
 	newFolder: FolderDetails;
 	id: string;
-	parent_id: string;
+	parentId: string;
 }
 
 interface FileDetails {
@@ -59,7 +59,7 @@ export function ProjectFolderContents(props: ProjectFolderContentsProps): JSXEle
     const [Files, SetFiles] = createStore<{[key:string]: FileDetails}>({});
 
 	listen<FolderCreated>("folder-added", (event) => {
-		if (event.payload.id !== props.id) return;
+		if (event.payload.parentId !== props.id) return;
 		const newFolderItem: ProjectFolderProps = {
 			displayName: event.payload.newFolder.displayName,
 			id: event.payload.id,
