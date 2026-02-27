@@ -56,7 +56,7 @@ function ProjectFolder(props: ProjectFolderProps): JSXElement {
 
 export function ProjectFolderContents(props: ProjectFolderContentsProps): JSXElement {
 	const [Subdirs, SetSubdirs] = createStore<ProjectFolderProps[]>([]);
-    const [Files, SetFiles] = createStore<
+    const [Files, SetFiles] = createStore<{[key:string]: FileDetails}>({});
 
 	listen<FolderCreated>("folder-added", (event) => {
 		if (event.payload.id !== props.id) return;
@@ -65,8 +65,13 @@ export function ProjectFolderContents(props: ProjectFolderContentsProps): JSXEle
 			id: event.payload.id,
             curSelDirSetter: props.curSelDirSestter
 		};
-		SetSubdirs([...Subdirs, newFolderItem]);
+		SetSubdirs(Subdirs.length, newFolderItem);
 	});
+
+    listen<FileAdded>("file-added", (event) => {
+        if (event.payload.parentId !== props.id) return;
+        SetFiles(event.payload.id, event.payload.newFile);
+    })
 
 	return (
 		<>
@@ -75,6 +80,11 @@ export function ProjectFolderContents(props: ProjectFolderContentsProps): JSXEle
                     <ProjectFolder id={item.id} displayName={item.displayName} curSelDirSetter={props.curSelDirSestter}/>
                 )}
             </For>
+            <For each={Object.entries(Files)}>{(item, _) =>(
+                <div id={item[0].toString()}>
+                   <Typography variant="body1">{item[1].displayName}</Typography> 
+                </div>
+            )}</For>
 		</>
 	);
 }
