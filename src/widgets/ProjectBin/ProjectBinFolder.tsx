@@ -9,15 +9,15 @@ interface ProjectFolderProps {
 }
 
 interface FolderDetails {
-    displayName: string,
-    containedFolders: string[],
-    containedSources: string[]
+	displayName: string;
+	containedFolders: string[];
+	containedSources: string[];
 }
 
 interface FolderCreated {
-    newFolder: FolderDetails,
-    id: string,
-    parent_id: string
+	newFolder: FolderDetails;
+	id: string;
+	parent_id: string;
 }
 
 function ProjectFolder(props: ProjectFolderProps): JSXElement {

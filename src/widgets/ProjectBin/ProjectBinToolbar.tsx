@@ -1,7 +1,7 @@
 import { JSXElement } from "solid-js";
 import { Button } from "@suid/material";
 import { invoke } from "@tauri-apps/api/core";
-import { AiFillFolderAdd } from "solid-icons/ai"
+import { AiFillFolderAdd } from "solid-icons/ai";
 
 interface ProjectBinToolbarProps {
 
