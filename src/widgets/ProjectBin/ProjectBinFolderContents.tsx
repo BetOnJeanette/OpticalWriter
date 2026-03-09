@@ -2,7 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import { createStore } from "solid-js/store";
 import { For, type JSXElement, Show, Setter, Accessor } from "solid-js";
 import { ProjectFolder, ProjectFolderProps} from "./ProjectBinFolder";
-import { Typography } from "@suid/material";
+import { FileDetails, ProjectBinFile } from "./ProjectBinFile";
 
 interface ProjectFolderContentsProps { 
     id: string;
@@ -20,11 +20,6 @@ interface FolderCreated {
 	newFolder: FolderDetails;
 	id: string;
 	parentId: string;
-}
-
-interface FileDetails {
-    path: string;
-    displayName: string;
 }
 
 interface FileAdded {
@@ -57,16 +52,15 @@ export function ProjectBinFolderContents(props: ProjectFolderContentsProps): JSX
 	return (
         <div id="project-bin-contents">
             <Show when={props.Expanded()}>
-                <For each={Subdirs}>
-                    {(item, _) => (
-                        <ProjectFolder id={item.id} displayName={item.displayName} curSelDirSetter={props.curSelDirSestter}/>
-                    )}
+                <For each={Subdirs}>{(item, _) =>
+                    (<ProjectFolder
+                        id={item.id}
+                        displayName={item.displayName}
+                        curSelDirSetter={props.curSelDirSestter}/>)}
                 </For>
-                <For each={Object.entries(Files)}>{(item, _) =>(
-                    <div id={item[0].toString()}>
-                       <Typography variant="body1">{item[1].displayName}</Typography> 
-                    </div>
-                )}</For>
+                <For each={Object.keys(Files)}>{(key, _) =>
+                    (<ProjectBinFile id={key} details={Files[key]} />)}
+                </For>
             </Show>
         </div>
 	);
