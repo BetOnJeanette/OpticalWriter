@@ -1,5 +1,5 @@
 import { JSXElement, Setter } from "solid-js";
-import { ProjectFolderContents } from "./ProjectBinFolder";
+import { ProjectBinFolderContents } from "./ProjectBinFolderContents";
 import { ROOT_KEY } from "./ProjectBin";
 
 interface ProjectBinDirectoryProps { 
@@ -7,5 +7,5 @@ interface ProjectBinDirectoryProps {
 }
 
 export function ProjectBinDirectory({curSelDirSetter}: ProjectBinDirectoryProps): JSXElement {
-    return (<ProjectFolderContents id={ROOT_KEY} curSelDirSestter={curSelDirSetter}/>)
+    return (<ProjectBinFolderContents id={ROOT_KEY} curSelDirSestter={curSelDirSetter}/>)
 }
