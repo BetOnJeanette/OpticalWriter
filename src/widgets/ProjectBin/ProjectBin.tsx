@@ -1,18 +1,16 @@
-import { createSignal, JSXElement } from "solid-js"
-import { ProjectBinToolbar } from "./ProjectBinToolbar"
-import { ProjectBinDirectory } from "./ProjectBinDirectory"
-
-interface ProjectBinProps {
-
-}
+import { createSignal, type JSXElement } from "solid-js";
+import { ProjectBinDirectory } from "./ProjectBinDirectory";
+import { ProjectBinToolbar } from "./ProjectBinToolbar";
 
 export const ROOT_KEY = "root";
 
-export function ProjectBin({}: ProjectBinProps): JSXElement {
-    const [selectedDir, UpdateSelectedDir] = createSignal<string>(ROOT_KEY);
+export function ProjectBin(): JSXElement {
+	const [selectedDir, UpdateSelectedDir] = createSignal<string>(ROOT_KEY);
 
-    return (<>
-        <ProjectBinToolbar curSelFold={selectedDir}/>
-        <ProjectBinDirectory curSelDirSetter={UpdateSelectedDir} />
-    </>)
+	return (
+		<>
+			<ProjectBinToolbar curSelFold={selectedDir} />
+			<ProjectBinDirectory curSelDirSetter={UpdateSelectedDir} />
+		</>
+	);
 }

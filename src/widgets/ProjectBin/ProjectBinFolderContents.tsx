@@ -1,13 +1,19 @@
 import { listen } from "@tauri-apps/api/event";
+import {
+	type Accessor,
+	For,
+	type JSXElement,
+	type Setter,
+	Show,
+} from "solid-js";
 import { createStore } from "solid-js/store";
-import { For, type JSXElement, Show, Setter, Accessor } from "solid-js";
-import { ProjectFolder, ProjectFolderProps} from "./ProjectBinFolder";
-import { FileDetails, ProjectBinFile } from "./ProjectBinFile";
+import { type FileDetails, ProjectBinFile } from "./ProjectBinFile";
+import { ProjectFolder, type ProjectFolderProps } from "./ProjectBinFolder";
 
-interface ProjectFolderContentsProps { 
-    id: string;
-    curSelDirSestter: Setter<string>;
-    Expanded?: Accessor<boolean>;
+interface ProjectFolderContentsProps {
+	id: string;
+	curSelDirSestter: Setter<string>;
+	Expanded?: Accessor<boolean>;
 }
 
 interface FolderDetails {
@@ -23,45 +29,52 @@ interface FolderCreated {
 }
 
 interface FileAdded {
-    newFile: FileDetails;
-    id: string;
-    parentId: string;
+	newFile: FileDetails;
+	id: string;
+	parentId: string;
 }
 
-export function ProjectBinFolderContents(props: ProjectFolderContentsProps): JSXElement {
+export function ProjectBinFolderContents(
+	props: ProjectFolderContentsProps,
+): JSXElement {
 	const [Subdirs, SetSubdirs] = createStore<ProjectFolderProps[]>([]);
-    const [Files, SetFiles] = createStore<{[key:string]: FileDetails}>({});
-    if (props.Expanded === null || props.Expanded === undefined) {
-        props.Expanded = () => { return true; }
-    }
+	const [Files, SetFiles] = createStore<{ [key: string]: FileDetails }>({});
+	if (props.Expanded === null || props.Expanded === undefined) {
+		props.Expanded = () => {
+			return true;
+		};
+	}
 	listen<FolderCreated>("folder-added", (event) => {
 		if (event.payload.parentId !== props.id) return;
 		const newFolderItem: ProjectFolderProps = {
 			displayName: event.payload.newFolder.displayName,
 			id: event.payload.id,
-            curSelDirSetter: props.curSelDirSestter
+			curSelDirSetter: props.curSelDirSestter,
 		};
 		SetSubdirs(Subdirs.length, newFolderItem);
 	});
 
-    listen<FileAdded>("file-added", (event) => {
-        if (event.payload.parentId !== props.id) return;
-        SetFiles(event.payload.id, event.payload.newFile);
-    })
+	listen<FileAdded>("file-added", (event) => {
+		if (event.payload.parentId !== props.id) return;
+		SetFiles(event.payload.id, event.payload.newFile);
+	});
 
 	return (
-        <div id="project-bin-contents">
-            <Show when={props.Expanded()}>
-                <For each={Subdirs}>{(item, _) =>
-                    (<ProjectFolder
-                        id={item.id}
-                        displayName={item.displayName}
-                        curSelDirSetter={props.curSelDirSestter}/>)}
-                </For>
-                <For each={Object.keys(Files)}>{(key, _) =>
-                    (<ProjectBinFile id={key} details={Files[key]} />)}
-                </For>
-            </Show>
-        </div>
+		<div id="project-bin-contents">
+			<Show when={props.Expanded()}>
+				<For each={Subdirs}>
+					{(item, _) => (
+						<ProjectFolder
+							id={item.id}
+							displayName={item.displayName}
+							curSelDirSetter={props.curSelDirSestter}
+						/>
+					)}
+				</For>
+				<For each={Object.keys(Files)}>
+					{(key, _) => <ProjectBinFile id={key} details={Files[key]} />}
+				</For>
+			</Show>
+		</div>
 	);
 }
