@@ -31,4 +31,5 @@ features = [
 ]
 
 [dev-dependencies]
+clippy = "0.0.302"
 fmt = "0.1.0"

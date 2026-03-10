@@ -3,6 +3,8 @@ pre-commit:
   jobs:
     - name: frontend linting
       run: bun lint
+      glob: "*.{js,jsx,ts,tsx}"
     - name: backend linting
       root: src-tauri/
-      run: cargo fmt
+      glob: "*.rs"
+      run: cargo fmt {files} & cargo clippy --fix
