@@ -1,5 +1,8 @@
 pre-commit:
   parallel: true
   jobs:
-    - name: linting
+    - name: frontend linting
       run: bun lint
+    - name: backend linting
+      root: src-tauri/
+      run: cargo fmt

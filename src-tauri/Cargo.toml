@@ -29,3 +29,6 @@ version = "1.19.0"
 features = [
     "v4",
 ]
+
+[dev-dependencies]
+fmt = "0.1.0"
