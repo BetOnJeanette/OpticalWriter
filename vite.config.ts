@@ -1,5 +1,6 @@
 import suidPlugin from "@suid/vite-plugin";
 import { defineConfig } from "vite";
+import { playwright } from "@vitest/browser-playwright"
 import solid from "vite-plugin-solid";
 
 // @ts-expect-error process is a nodejs global
@@ -30,4 +31,15 @@ export default defineConfig(async () => ({
 			ignored: ["**/src-tauri/**"],
 		},
 	},
+    test: {
+        browser: {
+            enabled: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium' }],
+        },
+    },  
+    define: {
+        // solid-testing-library relies on "process" which is not shimmed by default
+        'process.env.STL_SKIP_AUTO_CLEANUP': 'false'
+    },
 }));
