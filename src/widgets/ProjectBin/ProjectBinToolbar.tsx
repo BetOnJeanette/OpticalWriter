@@ -7,6 +7,9 @@ type ProjectBinToolbarProps = {
 	curSelFold: Accessor<string>;
 };
 
+export const NEW_FILE_COMMAND = "request_new_file";
+export const NEW_FOLDER_COMMAND = "add_folder";
+
 export function ProjectBinToolbar({
 	curSelFold,
 }: ProjectBinToolbarProps): JSXElement {
@@ -16,15 +19,18 @@ export function ProjectBinToolbar({
 				size="small"
 				fullWidth={false}
 				onClick={() =>
-					invoke("request_new_file", { selectedFolderId: curSelFold() })
+					invoke(NEW_FILE_COMMAND, { selectedFolderId: curSelFold() })
 				}
+				id="fileAdd"
 			>
 				+
 			</Button>
 			<Button
 				size="small"
 				fullWidth={false}
-				onClick={() => invoke("add_folder", { selectedDirId: curSelFold() })}
+				onClick={() =>
+					invoke(NEW_FOLDER_COMMAND, { selectedDirId: curSelFold() })
+				}
 			>
 				<AiFillFolderAdd />
 			</Button>
