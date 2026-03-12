@@ -25,3 +25,5 @@ dist/*
 
 # JS stuff
 /node_modules/*
+
+/coverage/*
