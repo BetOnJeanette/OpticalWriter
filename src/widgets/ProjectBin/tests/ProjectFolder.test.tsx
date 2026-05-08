@@ -12,28 +12,36 @@ function invokeSpy() {
 }
 
 describe("Make sure folders render as expected", () => {
-    afterEach(() => {
-        clearMocks();
-    })
+	afterEach(() => {
+		clearMocks();
+	});
 
-    test("clicking on subfolder invokes setter with the correct folder", async () => {
-        mockIPC(() => {}, { shouldMockEvents: true });
-        const rootLabel = "root";
-        const otherLabel = "Another folder";
-        const curDirSetter = vi.fn((_) => 1);
-        const { getByText } = render(() => (
-            <>
-                <ProjectFolder id={ROOT_KEY} displayName={rootLabel} curSelDirSetter={curDirSetter}/> 
-                <ProjectFolder id={"awawaa"} displayName={otherLabel} curSelDirSetter={curDirSetter}/> 
-            </>
-        ));
-        const projectRoot = getByText(rootLabel); 
-        const otherFolder = getByText(otherLabel);
+	test("clicking on subfolder invokes setter with the correct folder", async () => {
+		mockIPC(() => {}, { shouldMockEvents: true });
+		const rootLabel = "root";
+		const otherLabel = "Another folder";
+		const curDirSetter = vi.fn((_) => 1);
+		const { getByText } = render(() => (
+			<>
+				<ProjectFolder
+					id={ROOT_KEY}
+					displayName={rootLabel}
+					curSelDirSetter={curDirSetter}
+				/>
+				<ProjectFolder
+					id={"awawaa"}
+					displayName={otherLabel}
+					curSelDirSetter={curDirSetter}
+				/>
+			</>
+		));
+		const projectRoot = getByText(rootLabel);
+		const otherFolder = getByText(otherLabel);
 
-        await user.click(otherFolder);
-        expect(curDirSetter).toHaveBeenCalledWith("awawaa");
-        
-        await user.click(projectRoot);
-        expect(curDirSetter).toHaveBeenCalledWith(ROOT_KEY);
-    });
-})
+		await user.click(otherFolder);
+		expect(curDirSetter).toHaveBeenCalledWith("awawaa");
+
+		await user.click(projectRoot);
+		expect(curDirSetter).toHaveBeenCalledWith(ROOT_KEY);
+	});
+});
