@@ -1,47 +1,51 @@
 import { render } from "@solidjs/testing-library";
-import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
+import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { For } from "solid-js";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import { ProjectFolder } from "../ProjectBinFolder";
 
 const user = userEvent.setup();
 
-function invokeSpy() {
-	return vi.spyOn(window.__TAURI_INTERNALS__, "invoke");
-}
-
 describe("Make sure folders render as expected", () => {
-	afterEach(() => {
-		clearMocks();
+	const folders = [
+		{
+			id: ROOT_KEY,
+			name: "root",
+		},
+		{
+			id: "awawawa",
+			name: "another folder",
+		},
+	];
+
+	let getByText: Function | undefined;
+	const curDirSetter = vi.fn((_) => 1);
+	beforeAll(() => {
+		mockIPC(() => {}, { shouldMockEvents: true });
+		const rendered = render(() => (
+			<For each={folders}>
+				{(folder, _) => (
+					<ProjectFolder
+						id={folder.id}
+						displayName={folder.name}
+						curSelDirSetter={curDirSetter}
+					/>
+				)}
+			</For>
+		));
+		getByText = rendered.getByText;
 	});
 
-	test("clicking on subfolder invokes setter with the correct folder", async () => {
-		mockIPC(() => {}, { shouldMockEvents: true });
-		const rootLabel = "root";
-		const otherLabel = "Another folder";
-		const curDirSetter = vi.fn((_) => 1);
-		const { getByText } = render(() => (
-			<>
-				<ProjectFolder
-					id={ROOT_KEY}
-					displayName={rootLabel}
-					curSelDirSetter={curDirSetter}
-				/>
-				<ProjectFolder
-					id={"awawaa"}
-					displayName={otherLabel}
-					curSelDirSetter={curDirSetter}
-				/>
-			</>
-		));
-		const projectRoot = getByText(rootLabel);
-		const otherFolder = getByText(otherLabel);
-
-		await user.click(otherFolder);
-		expect(curDirSetter).toHaveBeenCalledWith("awawaa");
-
-		await user.click(projectRoot);
-		expect(curDirSetter).toHaveBeenCalledWith(ROOT_KEY);
+	test.each(
+		folders,
+	)("clicking on subfolder %s invokes setter with the correct folder", async (folder) => {
+		if (getByText === undefined) {
+			throw Error();
+		}
+		const curFolder = getByText(folder.name);
+		await user.click(curFolder);
+		expect(curDirSetter).toHaveBeenCalledWith(folder.id);
 	});
 });
