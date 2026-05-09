@@ -1,7 +1,7 @@
 import { render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
-import { beforeAll, describe, expect, Mock, test, vi } from "vitest";
+import { beforeAll, describe, expect, type Mock, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import {
 	NEW_FILE_COMMAND,
@@ -17,16 +17,18 @@ function invokeSpy() {
 }
 
 describe("Make sure the buttons function as expected", () => {
-    let spy: Mock | undefined;
-    beforeAll(() => {
+	let spy: Mock | undefined;
+	beforeAll(() => {
 		mockIPC(() => {});
 		spy = invokeSpy();
-    });
+	});
 	test.each([
 		ROOT_KEY,
 		"aNestedFolderId",
 	])("calls to add file at %s", async (currentFolder: string) => {
-        if (spy === undefined) { throw Error(); }
+		if (spy === undefined) {
+			throw Error();
+		}
 		const { getByRole } = render(() => (
 			<ProjectBinToolbar curSelFold={() => currentFolder} />
 		));
