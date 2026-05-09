@@ -1,7 +1,7 @@
 import { render } from "@solidjs/testing-library";
-import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
+import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { beforeAll, describe, expect, Mock, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import {
 	NEW_FILE_COMMAND,
@@ -17,20 +17,20 @@ function invokeSpy() {
 }
 
 describe("Make sure the buttons function as expected", () => {
-	afterEach(() => {
-		clearMocks();
-	});
-
+    let spy: Mock | undefined;
+    beforeAll(() => {
+		mockIPC(() => {});
+		spy = invokeSpy();
+    });
 	test.each([
 		ROOT_KEY,
 		"aNestedFolderId",
 	])("calls to add file at %s", async (currentFolder: string) => {
-		mockIPC(() => {});
+        if (spy === undefined) { throw Error(); }
 		const { getByRole } = render(() => (
 			<ProjectBinToolbar curSelFold={() => currentFolder} />
 		));
 		const addFileButton = getByRole("button", { name: "+" });
-		const spy = invokeSpy();
 		await user.click(addFileButton);
 		expect(spy).toBeCalledWith(
 			NEW_FILE_COMMAND,
@@ -44,12 +44,10 @@ describe("Make sure the buttons function as expected", () => {
 		ROOT_KEY,
 		"aNestedFolderId",
 	])("calls to add folder at %s", async (currentFolder: string) => {
-		mockIPC(() => {});
 		const { getByRole } = render(() => (
 			<ProjectBinToolbar curSelFold={() => currentFolder} />
 		));
 		const addFolderButton = getByRole("button", { name: NEW_FOLDER_TITLE });
-		const spy = invokeSpy();
 		await user.click(addFolderButton);
 		expect(spy).toBeCalledWith(
 			NEW_FOLDER_COMMAND,
