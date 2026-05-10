@@ -1,4 +1,4 @@
-import { render } from "@solidjs/testing-library";
+import { getByRole, render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
 import { For } from "solid-js";
@@ -8,7 +8,7 @@ import { ProjectFolder } from "../ProjectBinFolder";
 
 const user = userEvent.setup();
 
-describe("Make sure folders render as expected", () => {
+describe("Make sure folders react to clicking for focus as expected", () => {
 	const folders = [
 		{
 			id: ROOT_KEY,
@@ -21,6 +21,7 @@ describe("Make sure folders render as expected", () => {
 	];
 
 	let getByText: Function | undefined;
+	let getByRole: Function | undefined;
 	const curDirSetter = vi.fn((_) => 1);
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
@@ -36,16 +37,41 @@ describe("Make sure folders render as expected", () => {
 			</For>
 		));
 		getByText = rendered.getByText;
+		getByRole = rendered.getByRole;
 	});
 
 	test.each(
 		folders,
-	)("clicking on subfolder %s invokes setter with the correct folder", async (folder) => {
+	)("clicking on subfolder $name invokes setter with the correct folder", async (folder) => {
 		if (getByText === undefined) {
 			throw Error();
 		}
 		const curFolder = getByText(folder.name);
 		await user.click(curFolder);
 		expect(curDirSetter).toHaveBeenCalledWith(folder.id);
+	});
+
+	test("Closing and opening the folder changes the icon", async () => {
+		if (getByRole === undefined) {
+			throw Error();
+		}
+
+		const expandFolderIcon = getByRole("img", {
+			name: `Expand ${folders[0].name}`,
+		});
+
+		await user.click(expandFolderIcon);
+		expect(expandFolderIcon).not.toBeInTheDocument();
+
+		const collapseFolderIcon = getByRole("img", {
+			name: `Collapse ${folders[0].name}`,
+		});
+		expect(collapseFolderIcon).toBeInTheDocument();
+
+		await user.click(collapseFolderIcon);
+		expect(collapseFolderIcon).not.toBeInTheDocument();
+		expect(
+			getByRole("img", { name: "Expand " + folders[0].name }),
+		).toBeInTheDocument();
 	});
 });
