@@ -17,7 +17,7 @@ import {
 	ProjectBinFolderContents,
 } from "../ProjectBinFolderContents";
 
-describe("The folders listen to events from the backend", () => {
+describe("Folders listen to events from the backend", () => {
 	const NEW_FOLDER_LABEL = "NewFolder";
 
 	beforeAll(() => {
@@ -27,9 +27,11 @@ describe("The folders listen to events from the backend", () => {
 	afterAll(() => {
 		clearMocks();
 	});
+
 	afterEach(() => {
 		cleanup();
 	});
+
 	test("New subfolders get added to its parent folder", async () => {
 		const { getByText } = render(() => {
 			return (
@@ -51,6 +53,7 @@ describe("The folders listen to events from the backend", () => {
 		});
 		expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
 	});
+
 	test("New subfolders do not get added to other folders", async () => {
 		render(() => {
 			return (
