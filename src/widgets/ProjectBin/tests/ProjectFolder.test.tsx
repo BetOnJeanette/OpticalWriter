@@ -1,4 +1,4 @@
-import { getByRole, render } from "@solidjs/testing-library";
+import { render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
 import { For } from "solid-js";
@@ -71,7 +71,7 @@ describe("Make sure folders react to clicking for focus as expected", () => {
 		await user.click(collapseFolderIcon);
 		expect(collapseFolderIcon).not.toBeInTheDocument();
 		expect(
-			getByRole("img", { name: "Expand " + folders[0].name }),
+			getByRole(`img`, { name: `Expand  ${folders[0].name}` }),
 		).toBeInTheDocument();
 	});
 });
