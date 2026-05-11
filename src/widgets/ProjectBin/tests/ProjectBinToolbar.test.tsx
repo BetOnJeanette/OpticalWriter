@@ -1,7 +1,7 @@
 import { render } from "@solidjs/testing-library";
 import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, Mock, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import {
 	NEW_FILE_COMMAND,
@@ -14,7 +14,6 @@ const user = userEvent.setup();
 
 describe("Make sure the buttons function as expected", () => {
 	const spy = vi.spyOn(window.__TAURI_INTERNALS__, "invoke");
-
 	beforeAll(() => {
 		mockIPC(() => {});
 	});
