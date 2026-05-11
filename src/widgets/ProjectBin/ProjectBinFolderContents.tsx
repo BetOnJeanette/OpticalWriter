@@ -25,13 +25,13 @@ interface FolderDetails {
 	containedSources: string[];
 }
 
-interface FolderCreated {
+export interface FolderCreated {
 	newFolder: FolderDetails;
 	id: string;
 	parentId: string;
 }
 
-interface FileAdded {
+export interface FileAdded {
 	newFile: FileDetails;
 	id: string;
 	parentId: string;
