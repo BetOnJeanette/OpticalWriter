@@ -1,6 +1,7 @@
 import { cleanup, render, screen } from "@solidjs/testing-library";
 import { emit } from "@tauri-apps/api/event";
 import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
+import { createSignal } from "solid-js";
 import {
 	afterAll,
 	afterEach,
@@ -91,5 +92,53 @@ describe("Folders listen to events from the backend", () => {
 			const newFolder = screen.queryByText(NEW_FILE_NAME);
 			expect(newFolder).not.toBeInTheDocument();
 		}
+	});
+});
+
+describe("Collapsed state is respected", () => {
+	const [isExpanded, setExpanded] = createSignal<boolean>(false);
+
+	let rendered: ReturnType<typeof render> | undefined;
+
+	beforeAll(() => {
+		mockIPC(() => {}, { shouldMockEvents: true });
+		rendered = render(() => (
+			<ProjectBinFolderContents
+				id={ROOT_KEY}
+				curSelDirSestter={(_) => {}}
+				Expanded={isExpanded}
+			/>
+		));
+
+		emit<FileAdded>(NEW_FILE_RECEIEVED, {
+			newFile: {
+				path: "/",
+				displayName: NEW_FILE_NAME,
+			},
+			id: "awawa",
+			parentId: ROOT_KEY,
+		});
+
+		emit<FolderCreated>(NEW_FOLDER_RECEIVED, {
+			newFolder: {
+				displayName: NEW_FOLDER_LABEL,
+				containedFolders: [],
+				containedSources: [],
+			},
+			id: "awawawa",
+			parentId: ROOT_KEY,
+		});
+	});
+
+	test("Contents are shown when expanded", () => {
+		setExpanded(true);
+		expect(rendered?.getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
+		expect(rendered?.getByText(NEW_FILE_NAME)).toBeInTheDocument();
+	});
+
+	test("Contents are hiddent when contracted", () => {
+		setExpanded(false);
+		expect(screen.queryByText(NEW_FOLDER_LABEL)).not.toBeInTheDocument();
+		expect(screen.queryByText(NEW_FILE_NAME)).not.toBeInTheDocument();
 	});
 });
