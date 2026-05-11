@@ -13,7 +13,7 @@ export function ProjectFolder(props: ProjectFolderProps): JSXElement {
 	const [Expanded, SetExpanded] = createSignal(false);
 
 	return (
-		<div onclick={() => props.curSelDirSetter(props.id)}>
+		<li onclick={() => props.curSelDirSetter(props.id)}>
 			<Show
 				when={Expanded()}
 				fallback={
@@ -36,6 +36,6 @@ export function ProjectFolder(props: ProjectFolderProps): JSXElement {
 				id={props.id}
 				Expanded={Expanded}
 			/>
-		</div>
+		</li>
 	);
 }
