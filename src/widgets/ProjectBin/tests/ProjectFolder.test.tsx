@@ -1,4 +1,4 @@
-import { getByText, render } from "@solidjs/testing-library";
+import { render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
 import { For } from "solid-js";
@@ -19,7 +19,7 @@ const folders = [
 	},
 ];
 describe("Folders react to clicking for focus as expected", () => {
-	let rendered: returnType<typeof render> | undefined;
+	let rendered: ReturnType<typeof render> | undefined;
 	const curDirSetter = vi.fn((_) => 1);
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
@@ -39,7 +39,7 @@ describe("Folders react to clicking for focus as expected", () => {
 	test.each(
 		folders,
 	)("clicking on subfolder $name invokes setter with the correct folder", async (folder) => {
-		if (getByText === undefined) {
+		if (rendered === undefined) {
 			throw Error();
 		}
 		const curFolder = rendered.getByText(folder.name);
