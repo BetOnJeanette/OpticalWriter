@@ -49,7 +49,7 @@ describe("Folders react to clicking for focus as expected", () => {
 	});
 });
 
-describe("Folders react to other interactions as anticipated", () => { 
+describe("Folders react to other interactions as anticipated", () => {
 	test("Closing and opening the folder changes the icon", async () => {
 		const { getByRole } = render(() => (
 			<For each={folders}>
@@ -61,7 +61,7 @@ describe("Folders react to other interactions as anticipated", () => {
 					/>
 				)}
 			</For>
-        ));
+		));
 
 		const expandFolderIcon = getByRole("img", {
 			name: `Expand ${folders[0].name}`,
