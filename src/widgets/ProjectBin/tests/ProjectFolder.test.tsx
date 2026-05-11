@@ -8,7 +8,6 @@ import { ProjectFolder } from "../ProjectBinFolder";
 
 const user = userEvent.setup();
 
-describe("Make sure folders react to clicking for focus as expected", () => {
 	const folders = [
 		{
 			id: ROOT_KEY,
@@ -19,6 +18,7 @@ describe("Make sure folders react to clicking for focus as expected", () => {
 			name: "another folder",
 		},
 	];
+describe("Folders react to clicking for focus as expected", () => {
 
 	let getByText: Function | undefined;
 	let getByRole: Function | undefined;

@@ -20,7 +20,7 @@ import {
 
 const user = userEvent.setup();
 
-describe("Make sure the buttons function as expected", () => {
+describe("Buttons function as expected", () => {
 	beforeAll(() => {
 		mockIPC(() => {});
 	});
