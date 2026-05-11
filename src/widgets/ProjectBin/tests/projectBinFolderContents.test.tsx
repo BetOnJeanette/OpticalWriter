@@ -12,13 +12,18 @@ import {
 } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import {
+	type FileAdded,
 	type FolderCreated,
+	NEW_FILE_RECEIEVED,
 	NEW_FOLDER_RECEIVED,
 	ProjectBinFolderContents,
 } from "../ProjectBinFolderContents";
 
+const NEW_FOLDER_LABEL = "NewFolder";
+const NEW_FILE_NAME = "NewFile";
+
 describe("Folders listen to events from the backend", () => {
-	const NEW_FOLDER_LABEL = "NewFolder";
+	const PARENT_FOLDERS = [ROOT_KEY, "AnotherFolder"];
 
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
@@ -32,7 +37,9 @@ describe("Folders listen to events from the backend", () => {
 		cleanup();
 	});
 
-	test("New subfolders get added to its parent folder", async () => {
+	test.each(
+		PARENT_FOLDERS,
+	)("New subfolders get added if its parent folder, %s, matches the observed ROOT_KEY", async (parent) => {
 		const { getByText } = render(() => {
 			return (
 				<ProjectBinFolderContents
@@ -49,13 +56,19 @@ describe("Folders listen to events from the backend", () => {
 				containedSources: [],
 			},
 			id: "awawawa",
-			parentId: ROOT_KEY,
+			parentId: parent,
 		});
-		expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
+		if (parent === ROOT_KEY) {
+			expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
+		} else {
+			const newFolder = screen.queryByText(NEW_FOLDER_LABEL);
+			expect(newFolder).not.toBeInTheDocument();
+		}
 	});
-
-	test("New subfolders do not get added to other folders", async () => {
-		render(() => {
+	test.each(
+		PARENT_FOLDERS,
+	)("New files get added if its parent folder, %s, matches the observed ROOT_KEY", async (parent) => {
+		const { getByText } = render(() => {
 			return (
 				<ProjectBinFolderContents
 					id={ROOT_KEY}
@@ -64,16 +77,19 @@ describe("Folders listen to events from the backend", () => {
 				/>
 			);
 		});
-		emit<FolderCreated>(NEW_FOLDER_RECEIVED, {
-			newFolder: {
-				displayName: NEW_FOLDER_LABEL,
-				containedFolders: [],
-				containedSources: [],
+		emit<FileAdded>(NEW_FILE_RECEIEVED, {
+			newFile: {
+				path: "/",
+				displayName: NEW_FILE_NAME,
 			},
-			id: "awawawa",
-			parentId: "someOtherFolder",
+			id: "awawa",
+			parentId: parent,
 		});
-		const newFolder = screen.queryByText(NEW_FOLDER_LABEL);
-		expect(newFolder).not.toBeInTheDocument();
+		if (parent === ROOT_KEY) {
+			expect(getByText(NEW_FILE_NAME)).toBeInTheDocument();
+		} else {
+			const newFolder = screen.queryByText(NEW_FILE_NAME);
+			expect(newFolder).not.toBeInTheDocument();
+		}
 	});
 });
