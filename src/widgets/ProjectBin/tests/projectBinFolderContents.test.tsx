@@ -23,6 +23,31 @@ import {
 const NEW_FOLDER_LABEL = "NewFolder";
 const NEW_FILE_NAME = "NewFile";
 
+function GetTestFolder(parent?: string) {
+	if (parent === undefined) parent = ROOT_KEY;
+	return {
+		newFolder: {
+			displayName: NEW_FOLDER_LABEL,
+			containedFolders: [],
+			containedSources: [],
+		},
+		id: "awawawa",
+		parentId: parent,
+	};
+}
+
+function GetTestFile(parent?: string) {
+	if (parent === undefined) parent = ROOT_KEY;
+	return {
+		newFile: {
+			path: "/",
+			displayName: NEW_FILE_NAME,
+		},
+		id: "awawa",
+		parentId: parent,
+	};
+}
+
 describe("Folders listen to events from the backend", () => {
 	const PARENT_FOLDERS = [ROOT_KEY, "AnotherFolder"];
 
@@ -50,15 +75,7 @@ describe("Folders listen to events from the backend", () => {
 				/>
 			);
 		});
-		emit<FolderCreated>(NEW_FOLDER_RECEIVED, {
-			newFolder: {
-				displayName: NEW_FOLDER_LABEL,
-				containedFolders: [],
-				containedSources: [],
-			},
-			id: "awawawa",
-			parentId: parent,
-		});
+		emit<FolderCreated>(NEW_FOLDER_RECEIVED, GetTestFolder(parent));
 		if (parent === ROOT_KEY) {
 			expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
 		} else {
@@ -78,14 +95,7 @@ describe("Folders listen to events from the backend", () => {
 				/>
 			);
 		});
-		emit<FileAdded>(NEW_FILE_RECEIEVED, {
-			newFile: {
-				path: "/",
-				displayName: NEW_FILE_NAME,
-			},
-			id: "awawa",
-			parentId: parent,
-		});
+		emit<FileAdded>(NEW_FILE_RECEIEVED, GetTestFile(parent));
 		if (parent === ROOT_KEY) {
 			expect(getByText(NEW_FILE_NAME)).toBeInTheDocument();
 		} else {
@@ -110,24 +120,8 @@ describe("Collapsed state is respected", () => {
 			/>
 		));
 
-		emit<FileAdded>(NEW_FILE_RECEIEVED, {
-			newFile: {
-				path: "/",
-				displayName: NEW_FILE_NAME,
-			},
-			id: "awawa",
-			parentId: ROOT_KEY,
-		});
-
-		emit<FolderCreated>(NEW_FOLDER_RECEIVED, {
-			newFolder: {
-				displayName: NEW_FOLDER_LABEL,
-				containedFolders: [],
-				containedSources: [],
-			},
-			id: "awawawa",
-			parentId: ROOT_KEY,
-		});
+		emit<FileAdded>(NEW_FILE_RECEIEVED, GetTestFile());
+		emit<FolderCreated>(NEW_FOLDER_RECEIVED, GetTestFolder());
 	});
 
 	test("Contents are shown when expanded", () => {
