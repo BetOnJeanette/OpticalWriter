@@ -17,8 +17,7 @@ describe("The folders listen to events from the backend", () => {
 	afterAll(() => {
 		clearMocks();
 	});
-
-	test("New subfolders get added to its parent folder", () => {
+	test("New subfolders get added to its parent folder", async () => {
 		const { getByText } = render(() => {
 			return (
 				<ProjectBinFolderContents
@@ -28,7 +27,7 @@ describe("The folders listen to events from the backend", () => {
 				/>
 			);
 		});
-        const NEW_FOLDER_LABEL = "NewFolder"
+		const NEW_FOLDER_LABEL = "NewFolder";
 		emit<FolderCreated>(NEW_FOLDER_RECEIVED, {
 			newFolder: {
 				displayName: NEW_FOLDER_LABEL,
@@ -38,6 +37,6 @@ describe("The folders listen to events from the backend", () => {
 			id: "awawawa",
 			parentId: ROOT_KEY,
 		});
-        expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
+		expect(getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
 	});
 });
