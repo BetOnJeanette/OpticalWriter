@@ -32,7 +32,7 @@ export function ProjectFolder(props: ProjectFolderProps): JSXElement {
 			</Show>
 			<Typography variant="body1">{props.displayName}</Typography>
 			<ProjectBinFolderContents
-				curSelDirSestter={props.curSelDirSetter}
+				curSelDirSetter={props.curSelDirSetter}
 				id={props.id}
 				Expanded={Expanded}
 			/>

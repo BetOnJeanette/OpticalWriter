@@ -15,7 +15,7 @@ export const NEW_FILE_RECEIEVED = "file-added";
 
 interface ProjectFolderContentsProps {
 	id: string;
-	curSelDirSestter: Setter<string>;
+	curSelDirSetter: Setter<string>;
 	Expanded?: Accessor<boolean>;
 }
 
@@ -52,7 +52,7 @@ export function ProjectBinFolderContents(
 		const newFolderItem: ProjectFolderProps = {
 			displayName: event.payload.newFolder.displayName,
 			id: event.payload.id,
-			curSelDirSetter: props.curSelDirSestter,
+			curSelDirSetter: props.curSelDirSetter,
 		};
 		SetSubdirs(Subdirs.length, newFolderItem);
 	});
@@ -70,7 +70,7 @@ export function ProjectBinFolderContents(
 						<ProjectFolder
 							id={item.id}
 							displayName={item.displayName}
-							curSelDirSetter={props.curSelDirSestter}
+							curSelDirSetter={props.curSelDirSetter}
 						/>
 					)}
 				</For>
