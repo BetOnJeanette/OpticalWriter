@@ -10,6 +10,9 @@ import { createStore } from "solid-js/store";
 import { type FileDetails, ProjectBinFile } from "./ProjectBinFile";
 import { ProjectFolder, type ProjectFolderProps } from "./ProjectBinFolder";
 
+export const NEW_FOLDER_RECEIVED = "folder-added";
+export const NEW_FILE_RECEIEVED = "file-added";
+
 interface ProjectFolderContentsProps {
 	id: string;
 	curSelDirSestter: Setter<string>;
@@ -44,7 +47,7 @@ export function ProjectBinFolderContents(
 			return true;
 		};
 	}
-	listen<FolderCreated>("folder-added", (event) => {
+	listen<FolderCreated>(NEW_FOLDER_RECEIVED, (event) => {
 		if (event.payload.parentId !== props.id) return;
 		const newFolderItem: ProjectFolderProps = {
 			displayName: event.payload.newFolder.displayName,
@@ -54,7 +57,7 @@ export function ProjectBinFolderContents(
 		SetSubdirs(Subdirs.length, newFolderItem);
 	});
 
-	listen<FileAdded>("file-added", (event) => {
+	listen<FileAdded>(NEW_FILE_RECEIEVED, (event) => {
 		if (event.payload.parentId !== props.id) return;
 		SetFiles(event.payload.id, event.payload.newFile);
 	});

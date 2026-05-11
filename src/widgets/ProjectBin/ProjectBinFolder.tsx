@@ -19,14 +19,14 @@ export function ProjectFolder(props: ProjectFolderProps): JSXElement {
 				fallback={
 					<AiOutlineCaretRight
 						onclick={() => SetExpanded(true)}
-						title={"Expand " + props.displayName}
+						title={`Expand ${props.displayName}`}
 						role="img"
 					/>
 				}
 			>
 				<AiOutlineCaretDown
 					onclick={() => SetExpanded(false)}
-					title={"Collapse " + props.displayName}
+					title={`Collapse ${props.displayName}`}
 					role="img"
 				/>
 			</Show>
