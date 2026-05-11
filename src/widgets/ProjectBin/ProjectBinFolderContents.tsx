@@ -65,15 +65,17 @@ export function ProjectBinFolderContents(
 	return (
 		<div id="project-bin-contents">
 			<Show when={props.Expanded()}>
-				<For each={Subdirs}>
-					{(item, _) => (
-						<ProjectFolder
-							id={item.id}
-							displayName={item.displayName}
-							curSelDirSetter={props.curSelDirSetter}
-						/>
-					)}
-				</For>
+				<ul class="directory">
+					<For each={Subdirs}>
+						{(item, _) => (
+							<ProjectFolder
+								id={item.id}
+								displayName={item.displayName}
+								curSelDirSetter={props.curSelDirSetter}
+							/>
+						)}
+					</For>
+				</ul>
 				<For each={Object.keys(Files)}>
 					{(key, _) => <ProjectBinFile id={key} details={Files[key]} />}
 				</For>
