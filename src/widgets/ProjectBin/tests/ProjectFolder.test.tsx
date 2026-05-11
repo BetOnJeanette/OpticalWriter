@@ -8,20 +8,18 @@ import { ProjectFolder } from "../ProjectBinFolder";
 
 const user = userEvent.setup();
 
-	const folders = [
-		{
-			id: ROOT_KEY,
-			name: "root",
-		},
-		{
-			id: "awawawa",
-			name: "another folder",
-		},
-	];
+const folders = [
+	{
+		id: ROOT_KEY,
+		name: "root",
+	},
+	{
+		id: "awawawa",
+		name: "another folder",
+	},
+];
 describe("Folders react to clicking for focus as expected", () => {
-
 	let getByText: Function | undefined;
-	let getByRole: Function | undefined;
 	const curDirSetter = vi.fn((_) => 1);
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
@@ -37,7 +35,6 @@ describe("Folders react to clicking for focus as expected", () => {
 			</For>
 		));
 		getByText = rendered.getByText;
-		getByRole = rendered.getByRole;
 	});
 
 	test.each(
@@ -50,11 +47,21 @@ describe("Folders react to clicking for focus as expected", () => {
 		await user.click(curFolder);
 		expect(curDirSetter).toHaveBeenCalledWith(folder.id);
 	});
+});
 
+describe("Folders react to other interactions as anticipated", () => { 
 	test("Closing and opening the folder changes the icon", async () => {
-		if (getByRole === undefined) {
-			throw Error();
-		}
+		const { getByRole } = render(() => (
+			<For each={folders}>
+				{(folder, _) => (
+					<ProjectFolder
+						id={folder.id}
+						displayName={folder.name}
+						curSelDirSetter={(_) => {}}
+					/>
+				)}
+			</For>
+        ));
 
 		const expandFolderIcon = getByRole("img", {
 			name: `Expand ${folders[0].name}`,
