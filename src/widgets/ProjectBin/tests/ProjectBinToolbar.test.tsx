@@ -1,7 +1,7 @@
 import { render } from "@solidjs/testing-library";
 import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
-import { afterAll, beforeAll, describe, expect, Mock, test, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import {
 	NEW_FILE_COMMAND,
@@ -13,7 +13,6 @@ import {
 const user = userEvent.setup();
 
 describe("Make sure the buttons function as expected", () => {
-	const spy = vi.spyOn(window.__TAURI_INTERNALS__, "invoke");
 	beforeAll(() => {
 		mockIPC(() => {});
 	});
@@ -26,6 +25,7 @@ describe("Make sure the buttons function as expected", () => {
 		ROOT_KEY,
 		"aNestedFolderId",
 	])("calls to add file at %s", async (currentFolder: string) => {
+		const spy = vi.spyOn(window.__TAURI_INTERNALS__, "invoke");
 		const { getByRole } = render(() => (
 			<ProjectBinToolbar curSelFold={() => currentFolder} />
 		));
@@ -43,6 +43,7 @@ describe("Make sure the buttons function as expected", () => {
 		ROOT_KEY,
 		"aNestedFolderId",
 	])("calls to add folder at %s", async (currentFolder: string) => {
+		const spy = vi.spyOn(window.__TAURI_INTERNALS__, "invoke");
 		const { getByRole } = render(() => (
 			<ProjectBinToolbar curSelFold={() => currentFolder} />
 		));
