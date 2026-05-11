@@ -1,4 +1,4 @@
-import { render } from "@solidjs/testing-library";
+import { getByText, render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
 import { For } from "solid-js";
@@ -19,11 +19,11 @@ const folders = [
 	},
 ];
 describe("Folders react to clicking for focus as expected", () => {
-	let getByText: Function | undefined;
+    let rendered: returnType<typeof render> | undefined;
 	const curDirSetter = vi.fn((_) => 1);
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
-		const rendered = render(() => (
+		rendered = render(() => (
 			<For each={folders}>
 				{(folder, _) => (
 					<ProjectFolder
@@ -34,7 +34,6 @@ describe("Folders react to clicking for focus as expected", () => {
 				)}
 			</For>
 		));
-		getByText = rendered.getByText;
 	});
 
 	test.each(
@@ -43,7 +42,7 @@ describe("Folders react to clicking for focus as expected", () => {
 		if (getByText === undefined) {
 			throw Error();
 		}
-		const curFolder = getByText(folder.name);
+		const curFolder = rendered.getByText(folder.name);
 		await user.click(curFolder);
 		expect(curDirSetter).toHaveBeenCalledWith(folder.id);
 	});
