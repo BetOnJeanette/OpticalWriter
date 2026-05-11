@@ -1,6 +1,7 @@
 import { cleanup, render, screen } from "@solidjs/testing-library";
 import { emit } from "@tauri-apps/api/event";
 import { clearMocks, mockIPC } from "@tauri-apps/api/mocks";
+import userEvent from "@testing-library/user-event";
 import { createSignal } from "solid-js";
 import {
 	afterAll,
@@ -70,7 +71,7 @@ describe("Folders listen to events from the backend", () => {
 			return (
 				<ProjectBinFolderContents
 					id={ROOT_KEY}
-					curSelDirSestter={vi.fn((_) => 1)}
+					curSelDirSetter={vi.fn((_) => 1)}
 					Expanded={() => true}
 				/>
 			);
@@ -90,7 +91,7 @@ describe("Folders listen to events from the backend", () => {
 			return (
 				<ProjectBinFolderContents
 					id={ROOT_KEY}
-					curSelDirSestter={vi.fn((_) => 1)}
+					curSelDirSetter={vi.fn((_) => 1)}
 					Expanded={() => true}
 				/>
 			);
@@ -115,7 +116,7 @@ describe("Collapsed state is respected", () => {
 		rendered = render(() => (
 			<ProjectBinFolderContents
 				id={ROOT_KEY}
-				curSelDirSestter={(_) => {}}
+				curSelDirSetter={(_) => {}}
 				Expanded={isExpanded}
 			/>
 		));
@@ -134,5 +135,31 @@ describe("Collapsed state is respected", () => {
 		setExpanded(false);
 		expect(screen.queryByText(NEW_FOLDER_LABEL)).not.toBeInTheDocument();
 		expect(screen.queryByText(NEW_FILE_NAME)).not.toBeInTheDocument();
+	});
+});
+
+describe("Focus behaves as expected", () => {
+	let rendered: ReturnType<typeof render> | undefined;
+	const mockSetter = vi.fn((_) => {});
+	const user = userEvent.setup();
+
+	beforeAll(() => {
+		mockIPC(() => {}, { shouldMockEvents: true });
+		rendered = render(() => (
+			<ProjectBinFolderContents
+				id={ROOT_KEY}
+				curSelDirSetter={mockSetter}
+				Expanded={() => true}
+			/>
+		));
+
+		emit<FolderCreated>(NEW_FOLDER_RECEIVED, GetTestFolder());
+	});
+
+	test("Selecting subfolder does not select parent", async () => {
+		if (rendered === undefined) throw Error;
+		await user.click(rendered.getByText(NEW_FOLDER_LABEL));
+		expect(mockSetter).not.toHaveBeenCalledWith(ROOT_KEY);
+		expect(mockSetter).toHaveBeenCalledWith(GetTestFolder().id);
 	});
 });
