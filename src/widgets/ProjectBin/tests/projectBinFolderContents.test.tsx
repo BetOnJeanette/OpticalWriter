@@ -163,3 +163,23 @@ describe("Focus behaves as expected", () => {
 		expect(mockSetter).toHaveBeenCalledWith(GetTestFolder().id);
 	});
 });
+
+describe("Optional expanding works as anticipated", () => {
+	let rendered: ReturnType<typeof render> | undefined;
+
+	beforeAll(() => {
+		mockIPC(() => {}, { shouldMockEvents: true });
+		rendered = render(() => (
+			<ProjectBinFolderContents id={ROOT_KEY} curSelDirSetter={(_) => {}} />
+		));
+
+		emit<FileAdded>(NEW_FILE_RECEIEVED, GetTestFile());
+		emit<FolderCreated>(NEW_FOLDER_RECEIVED, GetTestFolder());
+	});
+
+	test("Assume folders to be expanded if no parameter provided", () => {
+		if (rendered === undefined) throw Error;
+		expect(rendered.getByText(NEW_FOLDER_LABEL)).toBeInTheDocument();
+		expect(rendered.getByText(NEW_FILE_NAME)).toBeInTheDocument();
+	});
+});
