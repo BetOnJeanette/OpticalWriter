@@ -71,7 +71,7 @@ describe("Make sure folders react to clicking for focus as expected", () => {
 		await user.click(collapseFolderIcon);
 		expect(collapseFolderIcon).not.toBeInTheDocument();
 		expect(
-			getByRole(`img`, { name: `Expand  ${folders[0].name}` }),
+			getByRole(`img`, { name: `Expand ${folders[0].name}` }),
 		).toBeInTheDocument();
 	});
 });
