@@ -1,8 +1,8 @@
-import { render } from "@solidjs/testing-library";
+import { cleanup, render } from "@solidjs/testing-library";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { userEvent } from "@testing-library/user-event";
 import { For } from "solid-js";
-import { beforeAll, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { ROOT_KEY } from "../ProjectBin";
 import { ProjectFolder } from "../ProjectBinFolder";
 
@@ -38,6 +38,10 @@ describe("Make sure folders react to clicking for focus as expected", () => {
 		));
 		getByText = rendered.getByText;
 		getByRole = rendered.getByRole;
+	});
+
+	afterEach(() => {
+		cleanup();
 	});
 
 	test.each(
