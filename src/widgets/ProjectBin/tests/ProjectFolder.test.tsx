@@ -19,7 +19,7 @@ const folders = [
 	},
 ];
 describe("Folders react to clicking for focus as expected", () => {
-    let rendered: returnType<typeof render> | undefined;
+	let rendered: returnType<typeof render> | undefined;
 	const curDirSetter = vi.fn((_) => 1);
 	beforeAll(() => {
 		mockIPC(() => {}, { shouldMockEvents: true });
