@@ -64,7 +64,7 @@ describe("Buttons function as expected", () => {
 		expect(spy).toBeCalledWith(
 			NEW_FOLDER_COMMAND,
 			{
-				selectedDirId: currentFolder,
+				selectedFolderId: currentFolder,
 			},
 			undefined,
 		);
