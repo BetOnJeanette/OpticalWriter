@@ -10,9 +10,6 @@ export function ProjectBinDirectory({
 	curSelDirSetter,
 }: ProjectBinDirectoryProps): JSXElement {
 	return (
-		<ProjectBinFolderContents
-			id={ROOT_KEY}
-			curSelDirSestter={curSelDirSetter}
-		/>
+		<ProjectBinFolderContents id={ROOT_KEY} curSelDirSetter={curSelDirSetter} />
 	);
 }
