@@ -30,7 +30,7 @@ export function ProjectBinToolbar({
 				size="small"
 				fullWidth={false}
 				onClick={() =>
-					invoke(NEW_FOLDER_COMMAND, { selectedDirId: curSelFold() })
+					invoke(NEW_FOLDER_COMMAND, { selectedFolderId: curSelFold() })
 				}
 			>
 				<AiFillFolderAdd title={NEW_FOLDER_TITLE} />

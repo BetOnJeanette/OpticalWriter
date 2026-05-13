@@ -13,9 +13,9 @@ struct NewFolder {
 }
 
 #[tauri::command]
-pub fn add_folder<R: Runtime>(app_handle: AppHandle<R>, selected_dir_id: String) {
+pub fn add_folder<R: Runtime>(app_handle: AppHandle<R>, selected_folder_id: String) {
     let cur_dir_state: State<Directory> = app_handle.state::<Directory>();
-    let parent_dir_id = get_safe_parent_dir_id(&selected_dir_id, &cur_dir_state);
+    let parent_dir_id = get_safe_parent_dir_id(&selected_folder_id, &cur_dir_state);
     let new_id = Uuid::new_v4().to_string();
     let new_fold = default_folder();
     cur_dir_state
