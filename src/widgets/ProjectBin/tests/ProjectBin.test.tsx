@@ -2,13 +2,7 @@ import { render } from "@solidjs/testing-library";
 import { emit } from "@tauri-apps/api/event";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import { type UserEvent, userEvent } from "@testing-library/user-event";
-import {
-	beforeAll,
-	describe,
-	expect,
-	test,
-	vi,
-} from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 import { ProjectBin, ROOT_KEY } from "../ProjectBin";
 import {
 	type FolderCreated,
